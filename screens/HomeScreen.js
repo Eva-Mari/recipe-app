@@ -4,7 +4,7 @@ import { Chips } from '../components/Chips'
 
 export function HomeScreen({ navigation }) {
 
-    const data = ["vegetarian", "potatoes", "beans", "banana"]
+    const data = ["vegetarian", "potatoes", "beans", "banana", "strawberry", "chicken", "pear"]
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Button
