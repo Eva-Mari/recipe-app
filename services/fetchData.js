@@ -1,25 +1,52 @@
-import * as cheerio from 'cheerio';
-import axios from 'axios';
+import * as cheerio from "cheerio";
+import axios from "axios";
 
 export const fetchData = async (url) => {
-    try {
-    
-      //'https://recept.se/recept/glutenfri-ror-ihop-kaka-i-liten-langpanna'
-      const response = await axios.get(url);
-      
+  try {
+    const response = await axios.get(url);
 
-      const $ = cheerio.load(response.data);
+    const $ = cheerio.load(response.data);
 
-      let scriptContent = $('script[type="application/ld+json"]').html();
+    return $;
+  } catch (error) {
+    console.error("Error when fetching data");
+    raise;
+  }
+};
 
-      scriptContent = JSON.parse(scriptContent)
+export const fetchRecipe = async (url) => {
+  try {
+    //'https://recept.se/recept/glutenfri-ror-ihop-kaka-i-liten-langpanna'
+    //const response = await axios.get(url);
 
-      console.log(scriptContent)
-    
-      return scriptContent
+    const $ = await fetchData(url); //cheerio.load(response.data);
 
+    let scriptContent = $('script[type="application/ld+json"]').html();
 
-    } catch (error) {
-      console.error('FETCH DATA ERROR!:', error);
-    }
-}
+    scriptContent = JSON.parse(scriptContent);
+
+    console.log(scriptContent);
+
+    return scriptContent;
+  } catch (error) {
+    console.error("FETCH DATA ERROR!:", error);
+    raise;
+  }
+};
+
+export const fetchSearchResults = async (url) => {
+  //"https://recept.se/sok?q=fisk
+  try {
+    const $ = await fetchData(url);
+    let scriptContent = $("advanced-search");
+
+    const initialData = scriptContent.attr(":initial-data");
+
+    const jsonData = JSON.parse(initialData);
+
+    return jsonData;
+  } catch (error) {
+    console.error("FETCH DATA ERROR!:", error);
+    raise;
+  }
+};
