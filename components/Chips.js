@@ -1,6 +1,6 @@
-import React from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
-import { Chip, withTheme, lightColors } from '@rneui/themed';
+import React from "react";
+import { View, ScrollView, StyleSheet } from "react-native";
+import { Chip } from "@rneui/themed";
 
 export const Chips = ({ data }) => {
   const handlePress = (item) => {
@@ -15,7 +15,7 @@ export const Chips = ({ data }) => {
             key={index}
             title={item}
             icon={{
-              type: 'font-awesome',
+              type: "font-awesome",
               size: 20,
             }}
             iconRight
@@ -34,12 +34,12 @@ export const Chips = ({ data }) => {
 
 const styles = StyleSheet.create({
   scrollViewContent: {
-    alignItems: 'center',
+    alignItems: "center",
   },
   contentView: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'center',
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
     marginTop: 20,
   },
   chipContainer: {
@@ -47,14 +47,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
   evenChip: {
-    marginRight: 'auto', // Aligns even chips to the left
+    marginRight: "auto", // Aligns even chips to the left
   },
   oddChip: {
-    marginLeft: 'auto', // Aligns odd chips to the right
+    marginLeft: "auto", // Aligns odd chips to the right
   },
 });
-
-
 
 //https://reactnativeelements.com/docs/components/chip
 //https://github.com/callstack/react-native-paper/issues/1154
