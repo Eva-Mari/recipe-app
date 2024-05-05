@@ -41,7 +41,6 @@ export function SearchResultScreen({ route, navigation }) {
 
   const retrieveSlugValue = (value) => {
     const newUrl = "https://recept.se/recept/" + value;
-    setSecondUrl(newUrl);
     navigation.navigate("Recipes", { url: newUrl });
   };
 
