@@ -16,10 +16,7 @@ export const fetchData = async (url) => {
 
 export const fetchRecipe = async (url) => {
   try {
-    //'https://recept.se/recept/glutenfri-ror-ihop-kaka-i-liten-langpanna'
-    //const response = await axios.get(url);
-
-    const $ = await fetchData(url); //cheerio.load(response.data);
+    const $ = await fetchData(url);
 
     let scriptContent = $('script[type="application/ld+json"]').html();
 
@@ -35,7 +32,6 @@ export const fetchRecipe = async (url) => {
 };
 
 export const fetchSearchResults = async (url) => {
-  //"https://recept.se/sok?q=fisk
   try {
     const $ = await fetchData(url);
     let scriptContent = $("advanced-search");

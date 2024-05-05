@@ -5,7 +5,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import { fetchSearchResults } from "../services/fetchData";
 import { SearchResultCard } from "../components/CardRecipesResults";
 
-export function SearchResultScreen({ route }) {
+export function SearchResultScreen({ route, navigation }) {
   const [searchResults, setSearchResults] = useState([]);
   const [url, setUrl] = useState("https://recept.se/sok");
 
@@ -39,13 +39,24 @@ export function SearchResultScreen({ route }) {
     }, [url])
   );
 
+  const retrieveSlugValue = (value) => {
+    const newUrl = "https://recept.se/recept/" + value;
+    setSecondUrl(newUrl);
+    navigation.navigate("Recipes", { url: newUrl });
+  };
+
   return (
     <View style={{ flex: 1 }}>
       {searchResults.recipes && searchResults.recipes.result && (
         <FlatList
           data={searchResults.recipes.result}
           renderItem={({ item }) => {
-            return <SearchResultCard recipe={item} />;
+            return (
+              <SearchResultCard
+                recipe={item}
+                retrieveSlugValue={retrieveSlugValue}
+              />
+            );
           }}
           keyExtractor={(item) => item.id.toString()}
         />

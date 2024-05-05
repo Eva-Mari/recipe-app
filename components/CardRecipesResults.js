@@ -1,9 +1,9 @@
 import * as React from "react";
 import { Card, Text, Button } from "react-native-paper";
 
-export const SearchResultCard = ({ recipe }) => {
+export const SearchResultCard = ({ recipe, retrieveSlugValue }) => {
   const handlePress = () => {
-    console.log(recipe.slug);
+    retrieveSlugValue(recipe.slug);
   };
   return (
     <Card>
