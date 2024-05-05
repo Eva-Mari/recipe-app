@@ -46,7 +46,6 @@ export const RecipeComponent = ({ recipe_json }) => (
           {`${index + 1}. ${instruction.text}`}
         </Text>
       ))}
-      {console.log(recipe_json)}
     </Card.Content>
   </Card>
 );

@@ -2,9 +2,10 @@ import React from "react";
 import { View, ScrollView, StyleSheet } from "react-native";
 import { Chip } from "@rneui/themed";
 
-export const Chips = ({ data }) => {
+export const Chips = ({ data, changeQuery }) => {
   const handlePress = (item) => {
-    console.log(`${item} chip was pressed!`);
+    //console.log(`${item.value} chip was pressed!`);
+    changeQuery(item.value);
   };
 
   return (
@@ -12,8 +13,8 @@ export const Chips = ({ data }) => {
       <View style={styles.contentView}>
         {data.map((item, index) => (
           <Chip
-            key={index}
-            title={item}
+            key={item.value}
+            title={item.label}
             icon={{
               type: "font-awesome",
               size: 20,
