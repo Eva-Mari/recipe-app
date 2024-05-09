@@ -10,7 +10,7 @@ export const fetchData = async (url) => {
     return $;
   } catch (error) {
     console.error("Error when fetching data");
-    raise;
+    throw error;
   }
 };
 
@@ -27,7 +27,7 @@ export const fetchRecipe = async (url) => {
     return scriptContent;
   } catch (error) {
     console.error("FETCH DATA ERROR!:", error);
-    raise;
+    throw error;
   }
 };
 
@@ -43,6 +43,6 @@ export const fetchSearchResults = async (url) => {
     return jsonData;
   } catch (error) {
     console.error("FETCH DATA ERROR!:", error);
-    raise;
+    throw error;
   }
 };

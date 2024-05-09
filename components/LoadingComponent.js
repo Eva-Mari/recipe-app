@@ -4,12 +4,11 @@ import AnimatedLoader from "react-native-animated-loader";
 
 export const LoadingComponent = ({ visible, loadingText }) => {
   return (
-    <View>
+    <View style={styles.container}>
       <AnimatedLoader
-        source={require("../assets/lottie_animation.json")}
         visible={visible}
         overlayColor="rgba(255, 255, 255, 0.75)"
-        //animationStyle={styles.loader}
+        animationStyle={styles.loader}
         speed={1}
       >
         <Text>{loadingText}</Text>
@@ -29,3 +28,5 @@ const styles = StyleSheet.create({
     height: 100,
   },
 });
+
+export default LoadingComponent;
