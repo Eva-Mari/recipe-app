@@ -4,12 +4,15 @@ import { useFocusEffect } from "@react-navigation/native";
 
 import { fetchSearchResults } from "../services/fetchData";
 import { SearchResultCard } from "../components/CardRecipesResults";
+import { LoadingComponent } from "../components/LoadingComponent";
 
 export function SearchResultScreen({ route, navigation }) {
   const [searchResults, setSearchResults] = useState([]);
   const [url, setUrl] = useState("https://recept.se/sok");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setSearchResults([]);
     setUrl(route.params.url);
     console.log("search result url set to ", route.params.url);
   }, [route.params.url]);
@@ -17,9 +20,12 @@ export function SearchResultScreen({ route, navigation }) {
   useFocusEffect(
     React.useCallback(() => {
       let isActive = true;
+      setSearchResults([]);
 
       const fetchData = async () => {
         try {
+          setLoading(true);
+          setSearchResults([]);
           console.log("Fetching data for url:", url);
           const results = await fetchSearchResults(url);
 
@@ -28,6 +34,9 @@ export function SearchResultScreen({ route, navigation }) {
           }
         } catch (error) {
           console.error("FETCH DATA ERROR!:", error);
+          // set some error component
+        } finally {
+          setLoading(false);
         }
       };
 
@@ -46,19 +55,21 @@ export function SearchResultScreen({ route, navigation }) {
 
   return (
     <View style={{ flex: 1 }}>
-      {searchResults.recipes && searchResults.recipes.result && (
-        <FlatList
-          data={searchResults.recipes.result}
-          renderItem={({ item }) => {
-            return (
+      {loading ? (
+        <LoadingComponent loadingText="Laddar recept" visible={loading} />
+      ) : (
+        searchResults.recipes && (
+          <FlatList
+            data={searchResults.recipes.result}
+            renderItem={({ item }) => (
               <SearchResultCard
                 recipe={item}
                 retrieveSlugValue={retrieveSlugValue}
               />
-            );
-          }}
-          keyExtractor={(item) => item.id.toString()}
-        />
+            )}
+            keyExtractor={(item) => item.id.toString()}
+          />
+        )
       )}
     </View>
   );
