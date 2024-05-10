@@ -28,11 +28,12 @@ export function SearchResultScreen({ route, navigation }) {
       const fetchData = async () => {
         try {
           setLoading(true);
-          console.log("Fetching data for url:", url);
+          console.log("Search result screen Fetching data for url:", url);
           const results = await fetchSearchResults(url);
 
           if (isActive) {
             setSearchResults(results);
+            console.log(results);
           }
         } catch (error) {
           console.error("Search result error when loading data:", error);
@@ -55,10 +56,16 @@ export function SearchResultScreen({ route, navigation }) {
     navigation.navigate("Recipes", { url: newUrl });
   };
 
-  if (error) {
+  if (
+    //Hur visa om inga recept har hittats på ett modulärt sätt?
+    error ||
+    !searchResults ||
+    !searchResults.recipes ||
+    !searchResults.recipes.result
+  ) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <LottieComponent text="Fel uppstod"></LottieComponent>
+        <LottieComponent text="Inga recept hittades"></LottieComponent>
       </View>
     );
   }
