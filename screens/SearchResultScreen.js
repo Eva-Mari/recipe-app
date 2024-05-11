@@ -1,19 +1,24 @@
-import { View, FlatList } from "react-native";
+import { View, FlatList, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 
-import { fetchSearchResults } from "../services/fetchData";
-import { SearchResultCard } from "../components/CardRecipesResults";
+import { fetchSearchResults, fetchRecipesResults } from "../services/fetchData";
+import {
+  SearchResultCard,
+  ReceptenResultCard,
+} from "../components/CardRecipesResults";
 import { LoadingComponent } from "../components/LoadingComponent";
 import { LottieComponent } from "../components/LottieComponent";
 
 export function SearchResultScreen({ route, navigation }) {
   const [searchResults, setSearchResults] = useState([]);
+  const [secondSearchResults, setSecondSearchResults] = useState([]);
   const [url, setUrl] = useState("https://recept.se/sok");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     setSearchResults([]);
     setUrl(route.params.url);
     setError(false);
@@ -30,10 +35,15 @@ export function SearchResultScreen({ route, navigation }) {
           setLoading(true);
           console.log("Search result screen Fetching data for url:", url);
           const results = await fetchSearchResults(url);
+          const res = await fetchRecipesResults(
+            "https://www.recepten.se/pages/search.xhtml?q=choklad"
+          );
 
           if (isActive) {
             setSearchResults(results);
-            console.log(results);
+            setSecondSearchResults(res);
+
+            //console.log(res);
           }
         } catch (error) {
           console.error("Search result error when loading data:", error);
@@ -56,12 +66,16 @@ export function SearchResultScreen({ route, navigation }) {
     navigation.navigate("Recipes", { url: newUrl });
   };
 
+  const retrieveLink = (value) => {
+    console.log(value);
+  };
+
   if (
-    //Hur visa om inga recept har hittats på ett modulärt sätt?
-    error ||
-    !searchResults ||
-    !searchResults.recipes ||
-    !searchResults.recipes.result
+    //Hur visa om inga recept har hittats på ett modulärt sätt? ||
+    // !searchResults ||
+    // !searchResults.recipes ||
+    // !searchResults.recipes.result
+    error
   ) {
     return (
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -70,24 +84,56 @@ export function SearchResultScreen({ route, navigation }) {
     );
   }
 
+  // return (
+  //   <View style={{ flex: 1 }}>
+  //     {loading ? (
+  //       <LoadingComponent loadingText="Laddar recept" visible={loading} />
+  //     ) : (
+  //       searchResults.recipes && (
+  //         <FlatList
+  //           data={searchResults.recipes.result}
+  //           renderItem={({ item }) => (
+  //             <SearchResultCard
+  //               recipe={item}
+  //               retrieveSlugValue={retrieveSlugValue}
+  //             />
+  //           )}
+  //           keyExtractor={(item) => item.id.toString()}
+  //         />
+  //       )
+  //     )}
+  //   </View>
+  // );
   return (
-    <View style={{ flex: 1 }}>
+    <ScrollView style={{ flex: 1 }}>
       {loading ? (
         <LoadingComponent loadingText="Laddar recept" visible={loading} />
       ) : (
-        searchResults.recipes && (
-          <FlatList
-            data={searchResults.recipes.result}
-            renderItem={({ item }) => (
-              <SearchResultCard
-                recipe={item}
-                retrieveSlugValue={retrieveSlugValue}
-              />
-            )}
-            keyExtractor={(item) => item.id.toString()}
-          />
-        )
+        <>
+          {searchResults.recipes && (
+            <>
+              {searchResults.recipes.result.map((item) => (
+                <SearchResultCard
+                  key={item.id}
+                  recipe={item}
+                  retrieveSlugValue={retrieveSlugValue}
+                />
+              ))}
+            </>
+          )}
+          {secondSearchResults.length > 0 && (
+            <>
+              {secondSearchResults.map((item, index) => (
+                <ReceptenResultCard
+                  key={index}
+                  recipe={item}
+                  retrieveLink={retrieveLink}
+                />
+              ))}
+            </>
+          )}
+        </>
       )}
-    </View>
+    </ScrollView>
   );
 }
