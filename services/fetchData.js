@@ -14,6 +14,46 @@ export const fetchData = async (url) => {
   }
 };
 
+export const fetchRecipeDetails = async (url) => {
+  try {
+    const $ = await fetchData(url);
+
+    // titel
+    const title = $("h1").text().trim();
+
+    // bilden
+    const firstImage = "https://www.recepten.se/" + $(".mainImage").attr("src");
+
+    // ingredienser
+    const ingredientsList = [];
+    $(".list.ingredients .ingredient").each((index, element) => {
+      const ingredient = $(element).text().trim();
+      ingredientsList.push(ingredient);
+    });
+
+    // instruktioner
+    const instructionsList = [];
+    $(".instructions .instructionItem li.instruction").each(
+      (index, element) => {
+        const instruction = $(element).find("p").text().trim();
+        instructionsList.push(instruction);
+      }
+    );
+
+    const recipeDetails = {
+      title,
+      firstImage,
+      ingredients: ingredientsList,
+      instructions: instructionsList,
+    };
+
+    return recipeDetails;
+  } catch (error) {
+    console.error("Error fetching recipe details:", error);
+    throw error;
+  }
+};
+
 export const fetchRecipesResults = async (url) => {
   try {
     const $ = await fetchData(url);
