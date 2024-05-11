@@ -14,6 +14,43 @@ export const fetchData = async (url) => {
   }
 };
 
+export const fetchRecipesResults = async (url) => {
+  try {
+    const $ = await fetchData(url);
+
+    const listItems = $(".listItem");
+
+    const recipeItems = [];
+
+    listItems.each((index, element) => {
+      const linkElement = $(element).find(".listItemImage");
+      const onclickAttribute = linkElement.attr("onclick");
+      const link = onclickAttribute
+        ? onclickAttribute.match(/'([^']+)'/)[1]
+        : "";
+      // Extract recipe information from each list item
+      const recipe = {
+        title: $(element).find(".searchResultItemTitle").text().trim(),
+        description: $(element)
+          .find(".listItemDescription p:last-child")
+          .text()
+          .trim(),
+        // Create the full URL and link to the image and detail screen
+
+        image:
+          "https://www.recepten.se" +
+          $(element).find(".listItemImage img").attr("src"),
+        slug: "https://www.recepten.se" + link,
+      };
+      recipeItems.push(recipe);
+    });
+    return recipeItems;
+  } catch (error) {
+    console.error("FETCH DATA ERROR from receoten. se bloggen!:", error);
+    throw error;
+  }
+};
+
 export const fetchRecipe = async (url) => {
   try {
     const $ = await fetchData(url);
