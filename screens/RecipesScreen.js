@@ -44,7 +44,7 @@ export const RecipesScreen = ({ route }) => {
           setLoading(true);
           let scriptData = [];
 
-          console.log(method);
+          console.log("This is the method ", method);
 
           if (method === "recept.se") {
             console.log("Fetching data for url:", url);

@@ -13,18 +13,26 @@ import { LottieComponent } from "../components/LottieComponent";
 export function SearchResultScreen({ route, navigation }) {
   const [searchResults, setSearchResults] = useState([]);
   const [secondSearchResults, setSecondSearchResults] = useState([]);
-  const [url, setUrl] = useState("https://recept.se/sok");
+  const [url, setUrl] = useState("https://recept.se/sok?q=");
+  const [url2, setUrl2] = useState(route.params.receptenUrl);
   const [loading, setLoading] = useState(true);
   //const [error, setError] = useState(false);
   //const [error2, setError2] = useState(false);
+  console.log("This are all params ", route.params, "!!");
 
   useEffect(() => {
     setLoading(true);
-    setUrl(route.params.url);
+    console.log("this are the route paramas ", route.params);
+    setUrl(route.params.receptSeUrl);
+    setUrl2(route.params.receptenUrl);
+
     //setError(false);
     //setError2(false);
-    console.log("search result url set to ", route.params.url);
-  }, [route.params.url]);
+    console.log("search recept.se url set to ", route.params.receptSeUrl);
+    console.log("search recepten.se url set to ", route.params.receptenUrl);
+  }, [route.params.receptSeUrl, route.params.receptenUrl]);
+
+  console.log(route.params);
 
   // useFocusEffect(
   //   React.useCallback(() => {
@@ -72,6 +80,7 @@ export function SearchResultScreen({ route, navigation }) {
         const results = await fetchSearchResults(url);
         setSearchResults(results);
       } catch (error) {
+        console.log("problem url: ", url);
         console.error("Search result error when loading data:", error);
         setSearchResults([]);
         //setError(true);
@@ -88,7 +97,8 @@ export function SearchResultScreen({ route, navigation }) {
       try {
         setLoading(true);
         const secondResults = await fetchRecipesResults(
-          "https://www.recepten.se/pages/search.xhtml?q=choklad"
+          url2
+          //"https://www.recepten.se/pages/search.xhtml?q=choklad"
         );
         setSecondSearchResults(secondResults);
       } catch (error) {
@@ -101,7 +111,7 @@ export function SearchResultScreen({ route, navigation }) {
     };
 
     fetchSecondData();
-  }, [url]);
+  }, [url2]);
 
   const retrieveSlugValue = (value) => {
     const newUrl = "https://recept.se/recept/" + value;
