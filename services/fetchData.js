@@ -16,6 +16,10 @@ export const fetchData = async (url) => {
 
 export const fetchRecipeDetails = async (url) => {
   try {
+    const response = await axios.get(url);
+    console.log("fetch data for recepten.se :", url);
+    console.log("the data ", response.data);
+
     const $ = await fetchData(url);
 
     // titel
@@ -31,14 +35,51 @@ export const fetchRecipeDetails = async (url) => {
       ingredientsList.push(ingredient);
     });
 
+    // const ingredientsList = [];
+    // $(".list.ingredients .ingredient").each((index, element) => {
+    //   const ingredient = $(element)
+    //     .clone() // Clone the element to preserve original
+    //     .children() // Get all children elements
+    //     .remove() // Remove children
+    //     .end() // Go back to the original element
+    //     .text() // Get the text content
+    //     .trim(); // Trim whitespace
+    //   if (ingredient) {
+    //     // Check if the ingredient is not empty after trimming
+    //     ingredientsList.push(ingredient);
+    //   }
+    // });
+
+    //   // instruktioner
+    //   const instructionsList = [];
+    //   $(".instructions .instructionItem li.instruction").each(
+    //     (index, element) => {
+    //       const instruction = $(element).find("p").text().trim();
+    //       instructionsList.push(instruction);
+    //     }
+    //   );
+
     // instruktioner
-    const instructionsList = [];
-    $(".instructions .instructionItem li.instruction").each(
-      (index, element) => {
-        const instruction = $(element).find("p").text().trim();
+    let instructionsList = [];
+    if ($(".instructions").length > 0) {
+      // Antingen finns instruktionerna i en div class "instructions"
+      $(".instructions p").each((index, element) => {
+        const instruction = $(element).text().trim();
         instructionsList.push(instruction);
-      }
-    );
+      });
+    } else {
+      // eller i h2 class handwriting och div class instructions
+      $(".handwriting").each((index, element) => {
+        if ($(element).text().trim() === "Gör så här:") {
+          $(element)
+            .nextUntil(".handwriting")
+            .each((index, element) => {
+              const instruction = $(element).text().trim();
+              instructionsList.push(instruction);
+            });
+        }
+      });
+    }
 
     const recipeDetails = {
       title,
@@ -52,6 +93,47 @@ export const fetchRecipeDetails = async (url) => {
     console.error("Error fetching recipe details:", error);
     throw error;
   }
+  // try {
+  //   const response = await axios.get(url);
+  //   console.log("fetch data for recepten.se :", url);
+  //   console.log("the data ", response.data);
+
+  //   const $ = await fetchData(url);
+
+  //   // titel
+  //   const title = $("h1").text().trim();
+
+  //   // bilden
+  //   const firstImage = "https://www.recepten.se/" + $(".mainImage").attr("src");
+
+  //   // ingredienser
+  //   const ingredientsList = [];
+  //   $(".list.ingredients .ingredient").each((index, element) => {
+  //     const ingredient = $(element).text().trim();
+  //     ingredientsList.push(ingredient);
+  //   });
+
+  //   // instruktioner
+  //   const instructionsList = [];
+  //   $(".instructions .instructionItem li.instruction").each(
+  //     (index, element) => {
+  //       const instruction = $(element).find("p").text().trim();
+  //       instructionsList.push(instruction);
+  //     }
+  //   );
+
+  //   const recipeDetails = {
+  //     title,
+  //     firstImage,
+  //     ingredients: ingredientsList,
+  //     instructions: instructionsList,
+  //   };
+
+  //   return recipeDetails;
+  // } catch (error) {
+  //   console.error("Error fetching recipe details:", error);
+  //   throw error;
+  // }
 };
 
 export const fetchRecipesResults = async (url) => {
