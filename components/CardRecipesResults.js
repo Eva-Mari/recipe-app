@@ -3,7 +3,7 @@ import { Card, Text, Button } from "react-native-paper";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { Image, View } from "react-native";
 
-export const SearchResultCard = ({ recipe, retrieveSlugValue }) => {
+export const ReceptSEResultCard = ({ recipe, retrieveSlugValue }) => {
   const handlePress = () => {
     retrieveSlugValue(recipe.slug);
   };

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 
 import { fetchSearchResults, fetchRecipesResults } from "../services/fetchData";
 import {
-  SearchResultCard,
+  ReceptSEResultCard,
   ReceptenResultCard,
 } from "../components/CardRecipesResults";
 import { LoadingComponent } from "../components/LoadingComponent";
@@ -96,7 +96,7 @@ export function SearchResultScreen({ route, navigation }) {
             searchResults.recipes.result && (
               <>
                 {searchResults.recipes.result.map((item) => (
-                  <SearchResultCard
+                  <ReceptSEResultCard
                     key={item.id}
                     recipe={item}
                     retrieveSlugValue={retrieveSlugValue}

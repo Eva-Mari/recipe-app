@@ -28,5 +28,3 @@ const styles = StyleSheet.create({
     height: 100,
   },
 });
-
-export default LoadingComponent;
