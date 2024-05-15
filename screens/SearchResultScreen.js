@@ -1,6 +1,5 @@
-import { View, FlatList, ScrollView } from "react-native";
+import { View, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useFocusEffect } from "@react-navigation/native";
 
 import { fetchSearchResults, fetchRecipesResults } from "../services/fetchData";
 import {
@@ -13,105 +12,51 @@ import { LottieComponent } from "../components/LottieComponent";
 export function SearchResultScreen({ route, navigation }) {
   const [searchResults, setSearchResults] = useState([]);
   const [secondSearchResults, setSecondSearchResults] = useState([]);
-  const [url, setUrl] = useState("https://recept.se/sok?q=");
-  const [url2, setUrl2] = useState(route.params.receptenUrl);
+  const [receptSeUrl, setReceptSeUrl] = useState(route.params.receptSeUrl);
+  const [receptenUrl, setReceptenUrl] = useState(route.params.receptenUrl);
   const [loading, setLoading] = useState(true);
-  //const [error, setError] = useState(false);
-  //const [error2, setError2] = useState(false);
-  console.log("This are all params ", route.params, "!!");
 
   useEffect(() => {
     setLoading(true);
-    console.log("this are the route paramas ", route.params);
-    setUrl(route.params.receptSeUrl);
-    setUrl2(route.params.receptenUrl);
-
-    //setError(false);
-    //setError2(false);
-    console.log("search recept.se url set to ", route.params.receptSeUrl);
-    console.log("search recepten.se url set to ", route.params.receptenUrl);
+    setReceptSeUrl(route.params.receptSeUrl);
+    setReceptenUrl(route.params.receptenUrl);
   }, [route.params.receptSeUrl, route.params.receptenUrl]);
 
   console.log(route.params);
-
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     let isActive = true;
-  //     //setSearchResults([]);
-
-  //     const fetchData = async () => {
-  //       try {
-  //         setLoading(true);
-  //         console.log("Search result screen Fetching data for url:", url);
-  //         const [results, res] = await Promise.all([
-  //           fetchSearchResults(url),
-  //           fetchRecipesResults(
-  //             "https://www.recepten.se/pages/search.xhtml?q=choklad"
-  //           ),
-  //         ]);
-
-  //         if (isActive) {
-  //           setSearchResults(results);
-  //           setSecondSearchResults(res);
-
-  //           console.log(searchResults);
-  //         }
-  //       } catch (error) {
-  //         console.error("Search result error when loading data:", error);
-  //         setError(true);
-  //       } finally {
-  //         setLoading(false);
-  //       }
-  //     };
-
-  //     fetchData();
-
-  //     return () => {
-  //       isActive = false;
-  //     };
-  //   }, [url])
-  // );
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        console.log("Search result screen Fetching data for url:", url);
-        const results = await fetchSearchResults(url);
+        const results = await fetchSearchResults(receptSeUrl);
         setSearchResults(results);
       } catch (error) {
-        console.log("problem url: ", url);
         console.error("Search result error when loading data:", error);
         setSearchResults([]);
-        //setError(true);
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [url]);
+  }, [receptSeUrl]);
 
   useEffect(() => {
     const fetchSecondData = async () => {
       try {
         setLoading(true);
-        const secondResults = await fetchRecipesResults(
-          url2
-          //"https://www.recepten.se/pages/search.xhtml?q=choklad"
-        );
+        const secondResults = await fetchRecipesResults(receptenUrl);
         setSecondSearchResults(secondResults);
       } catch (error) {
         console.error("Search result error when loading second data:", error);
         setSecondSearchResults([]);
-        //setError2(true);
       } finally {
         setLoading(false);
       }
     };
 
     fetchSecondData();
-  }, [url2]);
+  }, [receptenUrl]);
 
   const retrieveSlugValue = (value) => {
     const newUrl = "https://recept.se/recept/" + value;
