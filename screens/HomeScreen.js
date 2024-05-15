@@ -1,60 +1,51 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Button, TextInput, Keyboard } from "react-native";
+import { View, Button, Keyboard } from "react-native";
 import { Chips } from "../components/Chips";
 import { Searchbar } from "react-native-paper";
 
 export function HomeScreen({ navigation }) {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [selectedCategory, setSelectedCategory] = React.useState("");
-  const [receptSeUrl, setreceptSeUrl] = React.useState("https://recept.se/sok"); //vad ska skickas till annan sida om flera hemsidor skrapas?
-  const [receptenUrl, setreceptenUrl] = React.useState(
-    "https://www.recepten.se/pages/search.xhtml?q="
-  );
+  const [selectedChips, setSelectedChips] = useState([]);
+  const [receptSeUrl, setreceptSeUrl] = React.useState("");
+  const [receptenUrl, setreceptenUrl] = React.useState("");
 
   useEffect(() => {
     const encodedQuery = encodeURI(searchQuery);
     setreceptSeUrl(`https://recept.se/sok?q=${encodedQuery}`);
+    if (selectedCategory) {
+      setreceptSeUrl(
+        `https://recept.se/sok?q=${searchQuery}&${selectedCategory}`
+      );
+    } else {
+      setreceptSeUrl(`https://recept.se/sok?q=${searchQuery}`);
+    }
+
     setreceptenUrl(
       `https://www.recepten.se/pages/search.xhtml?q=${encodedQuery}`
     );
-  }, [searchQuery]);
-
-  // useEffect(() => {
-  //   if (selectedCategory) {
-  //     setreceptSeUrl(
-  //       `https://recept.se/sok?q=${searchQuery}&${selectedCategory}`
-  //     );
-  //   } else {
-  //     setreceptSeUrl(`https://recept.se/sok?q=${searchQuery}`);
-  //   }
-  // }, [searchQuery, selectedCategory]);
+  }, [selectedCategory, searchQuery]);
 
   useEffect(() => {
     const unsubscribe = navigation.addListener("blur", () => {
       setSearchQuery("");
+      setSelectedCategory("");
+      resetChips();
       Keyboard.dismiss();
     });
     return unsubscribe;
   }, [navigation]);
 
   const handleSearch = () => {
-    console.log("navigating handle search");
-    navigation.navigate("SearchResultScreen", {
-      urls: {
-        receptSeUrl: receptSeUrl,
-        receptenUrl: receptenUrl,
-      },
-    });
-  };
-
-  const changeQuery = (value) => {
-    console.log("navigating change query");
-    const updatedReceptSeUrl = `https://recept.se/sok?q=${searchQuery}&${value}`;
-    setreceptSeUrl(updatedReceptSeUrl);
     navigation.navigate("SearchResultScreen", {
       receptSeUrl: receptSeUrl,
       receptenUrl: receptenUrl,
     });
+  };
+
+  const resetChips = () => {
+    setSelectedCategory("");
+    setSelectedChips([]);
   };
 
   const data = [
@@ -76,16 +67,14 @@ export function HomeScreen({ navigation }) {
         value={searchQuery}
         onSubmitEditing={handleSearch}
       />
-      <Chips data={data} changeQuery={changeQuery} />
-      <Button
-        onPress={() =>
-          navigation.navigate("SearchResultScreen", {
-            receptSeUrl: receptSeUrl,
-            receptenUrl: receptenUrl,
-          })
-        }
-        title="Sök"
+      <Chips
+        data={data}
+        setSelectedCategory={setSelectedCategory}
+        resetChips={resetChips}
+        selectedChips={selectedChips}
+        setSelectedChips={setSelectedChips}
       />
+      <Button onPress={() => handleSearch()} title="Sök" />
     </View>
   );
 }

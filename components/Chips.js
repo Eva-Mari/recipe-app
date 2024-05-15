@@ -2,10 +2,20 @@ import React from "react";
 import { View, ScrollView, StyleSheet } from "react-native";
 import { Chip } from "@rneui/themed";
 
-export const Chips = ({ data, changeQuery }) => {
+export const Chips = ({
+  data,
+  setSelectedCategory,
+  selectedChips,
+  setSelectedChips,
+}) => {
   const handlePress = (item) => {
-    //console.log(`${item.value} chip was pressed!`);
-    changeQuery(item.value);
+    const isSelected = selectedChips.includes(item.value);
+    if (isSelected) {
+      setSelectedChips(selectedChips.filter((chip) => chip !== item.value));
+    } else {
+      setSelectedChips([...selectedChips, item.value]);
+    }
+    setSelectedCategory(item.value);
   };
 
   return (
@@ -20,10 +30,11 @@ export const Chips = ({ data, changeQuery }) => {
               size: 20,
             }}
             iconRight
-            type="outline"
+            type={selectedChips.includes(item.value) ? "solid" : "outline"}
             containerStyle={[
               styles.chipContainer,
               index % 2 === 0 ? styles.evenChip : styles.oddChip,
+              selectedChips.includes(item.value) && styles.selectedChip,
             ]}
             onPress={() => handlePress(item)}
           />
@@ -48,12 +59,12 @@ const styles = StyleSheet.create({
     marginHorizontal: 15,
   },
   evenChip: {
-    marginRight: "auto", // Aligns even chips to the left
+    marginRight: "auto",
   },
   oddChip: {
-    marginLeft: "auto", // Aligns odd chips to the right
+    marginLeft: "auto",
+  },
+  selectedChip: {
+    backgroundColor: "lightblue",
   },
 });
-
-//https://reactnativeelements.com/docs/components/chip
-//https://github.com/callstack/react-native-paper/issues/1154
