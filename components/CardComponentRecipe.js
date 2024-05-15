@@ -3,15 +3,20 @@ import { Card, Text } from "react-native-paper";
 import { StyleSheet } from "react-native";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 
-export const RecipeComponent = ({ recipe_json }) => (
+export const RecipeComponentReceptSE = ({ recipe_json }) => (
   <Card>
     <Card.Title title={recipe_json.name} subtitle={recipe_json.author.name} />
     <Card.Cover source={{ uri: recipe_json.image }} />
     <Card.Content>
-      {recipe_json.aggregateRating &&
-        recipe_json.aggregateRating.ratingValue && (
-          <StarRatingDisplay rating={recipe_json.aggregateRating.ratingValue} />
-        )}
+      {
+        // Not all recepies has a rating
+        recipe_json.aggregateRating &&
+          recipe_json.aggregateRating.ratingValue && (
+            <StarRatingDisplay
+              rating={recipe_json.aggregateRating.ratingValue}
+            />
+          )
+      }
       <Text style={styles.description}>{recipe_json.description}</Text>
       <Text style={styles.sectionTitle}>Ingredienser:</Text>
       {recipe_json.recipeIngredient.map((ingredient, index) => (

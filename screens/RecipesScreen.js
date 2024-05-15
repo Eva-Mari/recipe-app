@@ -4,7 +4,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { fetchRecipe, fetchRecipeDetails } from "../services/fetchData";
 import { useFocusEffect } from "@react-navigation/native";
 
-import { RecipeComponent } from "../components/CardComponentRecipe";
+import { RecipeComponentReceptSE } from "../components/CardComponentRecipe";
 import { RecipeComponentRecepten } from "../components/CardComponentReceptenDetail";
 import { LoadingComponent } from "../components/LoadingComponent";
 import { LottieComponent } from "../components/LottieComponent";
@@ -69,7 +69,7 @@ export const RecipesScreen = ({ route }) => {
       {loading ? (
         <LoadingComponent loadingText="Laddar recept" visible={loading} />
       ) : method === "recept.se" ? (
-        scrapedData && <RecipeComponent recipe_json={scrapedData} />
+        scrapedData && <RecipeComponentReceptSE recipe_json={scrapedData} />
       ) : (
         // Rendera en annan komponent för en annan metod
         <RecipeComponentRecepten recipe={scrapedData}></RecipeComponentRecepten>
