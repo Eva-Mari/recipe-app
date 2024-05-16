@@ -114,8 +114,6 @@ export const fetchRecipe = async (url) => {
 
     scriptContent = JSON.parse(scriptContent);
 
-    console.log(scriptContent);
-
     return scriptContent;
   } catch (error) {
     console.error("FETCH DATA ERROR!:", error);
